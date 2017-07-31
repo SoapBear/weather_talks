@@ -1,13 +1,18 @@
+CREATE TABLE sw_countries (
+    country_id INTEGER PRIMARY KEY,
+    country_name VARCHAR(16) NOT NULL
+)
+
 CREATE TABLE sw_cities (
-    city_id SERIAL PRIMARY KEY,
-    city_name VARCHAR(64) NOT NULL UNIQUE,
-    city_domain VARCHAR(5)
+    city_id INTEGER PRIMARY KEY,
+    city_name VARCHAR(64) NOT NULL,
+    city_country INTEGER REFERENCES sw_countries
 )
 
 CREATE TABLE sw_users (
     user_id SERIAL PRIMARY KEY,
     register_date TIMESTAMP NOT NULL,
-    city_id INTEGER DEFAULT NULL
+    city_id INTEGER REFERENCES sw_cities
 )
 
 CREATE TABLE sw_weather (
@@ -39,7 +44,7 @@ CREATE TABLE sw_users_ratings (
 
 CREATE TABLE sw_comments (
     comment_id SERIAL PRIMARY KEY,
-    user_id INTEGER,
+    user_id INTEGER REFERENCES sw_users,
     weeather_stamp_id INTEGER REFERENCES sw_weather_stamps,
     comment_time TIMESTAMP NOT NULL,
     likes_count SMALLINT DEFAULT 0,
@@ -49,14 +54,15 @@ CREATE TABLE sw_comments (
 )
 
 CREATE TABLE sw_comments_likes (
-    comment_id INTEGER PRIMARY KEY,
-    user_id INTEGER REFERENCES sw_users
+    comment_id INTEGER REFERENCES sw_comments,
+    user_id INTEGER REFERENCES sw_users,
+    PRIMARY KEY(comment_id, user_id)
 )
 
 CREATE TABLE sw_messages (
     message_id SERIAL PRIMARY KEY,
     weeather_stamp_id INTEGER REFERENCES sw_weather_stamps,
-    user_id INTEGER,
+    user_id INTEGER REFERENCES sw_users,
     message_label VARCHAR(32),
     message VARCHAR(128),
     CHECK((message_label IS NOT NULL) OR (message IS NOT NULL))
