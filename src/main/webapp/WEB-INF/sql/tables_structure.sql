@@ -1,12 +1,12 @@
 CREATE TABLE sw_cities (
     city_id SERIAL PRIMARY KEY,
-    city_name VARCHAR(64) NOT NULL
+    city_name VARCHAR(64) NOT NULL UNIQUE,
+    city_domain VARCHAR(5)
 )
-
-CREATE UNIQUE INDEX city_id_idx ON sw_cities(city_id)
 
 CREATE TABLE sw_users (
     user_id SERIAL PRIMARY KEY,
+    register_date TIMESTAMP NOT NULL,
     city_id INTEGER DEFAULT NULL
 )
 
@@ -19,8 +19,15 @@ CREATE TABLE sw_weather_stamps (
     weeather_stamp_id SERIAL PRIMARY KEY,
     city_id INTEGER REFERENCES sw_cities,
     time_stamp TIMESTAMP NOT NULL,
-    weather_id SMALLINT REFERENCES sw_weather
-    -- another characteristics
+    weather_id SMALLINT REFERENCES sw_weather,
+    atmosphere_pressure INTEGER,
+    air_temperature REAL,
+    air_humidity REAL,
+    wind_direction SMALLINT,
+    wind_speed REAL,
+    cloud_cover SMALLINT,
+    precipitation SMALLINT,
+    visibility SMALLINT
 )
 
 CREATE TABLE sw_users_ratings (
@@ -32,7 +39,7 @@ CREATE TABLE sw_users_ratings (
 
 CREATE TABLE sw_comments (
     comment_id SERIAL PRIMARY KEY,
-    user_id INTEGER DEFAULT NULL,
+    user_id INTEGER,
     weeather_stamp_id INTEGER REFERENCES sw_weather_stamps,
     comment_time TIMESTAMP NOT NULL,
     likes_count SMALLINT DEFAULT 0,
