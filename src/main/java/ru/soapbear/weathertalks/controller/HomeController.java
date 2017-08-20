@@ -1,29 +1,30 @@
 package ru.soapbear.weathertalks.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.soapbear.weathertalks.dao.TestDAO;
-import ru.soapbear.weathertalks.entity.TestEntity;
+import ru.soapbear.weathertalks.entity.City;
+import ru.soapbear.weathertalks.util.ResponseUtil;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    TestDAO testDAO;
+    private TestDAO testDAO;
 
-    @RequestMapping(value = "/testPage", method = RequestMethod.GET)
-    public String getTestPage() {
-        return "index.html";
-    }
-
-    @RequestMapping(value = "/testPage", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/addCity", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public TestEntity testPage(@RequestBody TestEntity entity) {
-        testDAO.testQuery(entity);
-        return entity;
+    public City addCity(@RequestBody City city) {
+        testDAO.saveCity(city);
+        return city;
     }
+
+    @RequestMapping(value = "/getCity/{cityId}", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public ResponseEntity<City> getCityById(@PathVariable(name="cityId") int cityId) {
+        return ResponseUtil.createResponseWithDefaultHeaders(testDAO.getCityById(cityId));
+    }
+
 }
