@@ -16,3 +16,8 @@ select *
     from sw_comments cm
         inner join sw_cities ct on ct.city_name = :city_name and cm.city_id = ct.city_id
     limit :count;
+
+
+select * from public.sw_cities;
+
+insert into sw_cities (city_id, city_name, city_country) values(1, 'Shwecbernburg', 3);
